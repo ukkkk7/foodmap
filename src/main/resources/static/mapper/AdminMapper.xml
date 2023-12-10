@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="pairproject.foodmap.repository.AdminMapper">
+
+
+    <resultMap id="user" type="UserDto">
+        <id property="userId" column="user_id"/>
+        <result property="birth" column="birth"/>
+        <result property="email" column="email"/>
+        <result property="name" column="name"/>
+        <result property="role" column="role"/>
+    </resultMap>
+    
+    
+    <!--모든 유저 조회-->
+    <select id="getUserList" resultMap="user">
+        select * from user
+    </select>
+
+
+    <delete id="deleteUser">
+        delete from user where user_id = #{userId}
+    </delete>
+
+    <select id="searchUser" resultMap="user">
+        select 
+            * 
+        from user 
+        where 
+        <if test="#{name} != null">
+            name like concat('%', #{name}, '%') <!--mybatis + mysql에서 like절 사용할 때 문법 -->
+        </if>
+    </select>
+
+
+
+
+
+</mapper>

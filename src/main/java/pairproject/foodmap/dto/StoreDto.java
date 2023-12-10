@@ -10,7 +10,7 @@ public class StoreDto {
    private String address;
    private String phone_number;
    private String runtime;
-   private double longtitude;
+   private double longitude;
    private double latitude;
    private int like_count;
    private int hate_count;
