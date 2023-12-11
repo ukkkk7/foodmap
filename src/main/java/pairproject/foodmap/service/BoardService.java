@@ -3,7 +3,10 @@ package pairproject.foodmap.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import pairproject.foodmap.domain.Board;
+import pairproject.foodmap.domain.BoardImage;
+import pairproject.foodmap.repository.BoardImageMapper;
 import pairproject.foodmap.repository.BoardMapper;
 
 import java.util.List;
@@ -15,8 +18,8 @@ public class BoardService {
     private final BoardMapper boardMapper;
 
     public Board createBoard(Board board) {
-        long boardId = boardMapper.saveAndGetId(board);
-        return getBoardById(boardId);
+        boardMapper.saveAndGetId(board);
+        return getBoardById(board.getBoardId());
     }
 
     public Board getBoardById(long boardId) {
