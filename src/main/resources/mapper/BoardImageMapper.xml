@@ -27,4 +27,12 @@
         SELECT * FROM board_Image WHERE board_id = #{boardId}
     </select>
 
+    <delete id="delete" parameterType="java.util.List">
+        DELETE FROM board_Image
+        WHERE name IN
+        <foreach collection="filenames" item="filename" open="(" close=")" separator=",">
+            #{filename}
+        </foreach>
+    </delete>
+
 </mapper>

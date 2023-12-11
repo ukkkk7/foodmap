@@ -35,11 +35,11 @@ public class BoardController {
 
     @PostMapping("/board")
     public ResponseEntity<BoardDto> boardCreate(@RequestPart Board board,
-                                                @RequestPart List<MultipartFile> multipartFiles,
+                                                @RequestPart("addFiles") List<MultipartFile> addFiles,
                                                 @RequestPart("mainImageFile") MultipartFile mainImageFile) {
         Board created = boardService.createBoard(board); //게시글 생성
         List<BoardImage> boardImages = boardImageService.createBoardImage( //게시글 이미지 생성
-                created.getBoardId(), multipartFiles, mainImageFile);
+                created.getBoardId(), addFiles, mainImageFile);
 
         //dto 변환
         BoardDto boardDto = getBoardDto(created);
@@ -63,16 +63,20 @@ public class BoardController {
         return new ResponseEntity<>(dtoList, HttpStatus.OK);
     }
 
-    @PatchMapping("/boards/{boardId}")
+    @PostMapping("/boards/{boardId}")
     public ResponseEntity<BoardDto> boardUpdate(@RequestPart Board board,
                                                 @PathVariable long boardId,
-                                                @RequestPart List<MultipartFile> multipartFiles) {
+                                                @RequestPart("addFiles") List<MultipartFile> addFiles,
+                                                @RequestPart("deleteFilenames") List<String> deleteFilenames) {
+        List<BoardImage> boardImages = boardImageService.updateBoardImage(boardId, addFiles, deleteFilenames);
         Board updated = boardService.updateBoard(board, boardId);
         return new ResponseEntity<>(getBoardDto(updated), HttpStatus.OK);
     }
 
     @DeleteMapping("/boards/{boardId}")
     public ResponseEntity<String> boardDelete(@PathVariable long boardId) {
+        List<String> filenames = boardImageService.getFilenameByBoardId(boardId);
+        boardImageService.deleteBoardImage(filenames);
         boardService.deleteBoard(boardId);
         return new ResponseEntity<>("삭제되었습니다.", HttpStatus.OK);
     }
