@@ -7,7 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pairproject.foodmap.domain.Board;
+import pairproject.foodmap.domain.BoardImage;
 import pairproject.foodmap.dto.BoardDto;
+import pairproject.foodmap.dto.BoardImageDto;
+import pairproject.foodmap.service.BoardImageService;
 import pairproject.foodmap.service.BoardService;
 
 import java.util.List;
@@ -17,17 +20,33 @@ import java.util.List;
 public class BoardController {
 
     private final BoardService boardService;
+    private final BoardImageService boardImageService;
     private final ModelMapper modelMapper;
 
     private BoardDto getBoardDto(Board board) {
         return modelMapper.map(board, BoardDto.class);
     }
 
+    private List<BoardImageDto> getBoardImageDto(List<BoardImage> boardImages) {
+        return boardImages.stream()
+                .map(boardImage -> modelMapper.map(boardImage, BoardImageDto.class))
+                .toList();
+    }
+
     @PostMapping("/board")
     public ResponseEntity<BoardDto> boardCreate(@RequestPart Board board,
-                                                @RequestPart List<MultipartFile> multipartFiles) {
-        Board created = boardService.createBoard(board);
-        return new ResponseEntity<>(getBoardDto(created), HttpStatus.OK);
+                                                @RequestPart List<MultipartFile> multipartFiles,
+                                                @RequestPart("mainImageFile") MultipartFile mainImageFile) {
+        Board created = boardService.createBoard(board); //게시글 생성
+        List<BoardImage> boardImages = boardImageService.createBoardImage( //게시글 이미지 생성
+                created.getBoardId(), multipartFiles, mainImageFile);
+
+        //dto 변환
+        BoardDto boardDto = getBoardDto(created);
+        List<BoardImageDto> boardImageDto = getBoardImageDto(boardImages);
+        boardDto.setBoardImages(boardImageDto);
+
+        return new ResponseEntity<>(boardDto, HttpStatus.OK);
     }
 
     @GetMapping("/boards/{boardId}")

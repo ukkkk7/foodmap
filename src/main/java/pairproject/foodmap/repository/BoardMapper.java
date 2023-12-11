@@ -10,7 +10,7 @@ import java.util.List;
 @Mapper
 @Repository
 public interface BoardMapper {
-    long saveAndGetId(Board board);
+    void saveAndGetId(Board board);
 
     Board findById(long boardId);
 
