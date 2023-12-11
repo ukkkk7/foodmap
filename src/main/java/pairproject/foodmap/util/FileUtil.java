@@ -30,8 +30,8 @@ public class FileUtil {
 
     public String saveOne(MultipartFile multipartFile, boolean checkMainImage) {
         String filename = changeFilename(multipartFile.getOriginalFilename());
-        //사용자가 선택한 메인 이미지의 경우 파일명에 '[Main]_' 추가
-        String changeFilename = checkMainImage ? "[Main]_" + filename : filename;
+        //사용자가 선택한 메인 이미지의 경우 파일명에 'Main_' 추가
+        String changeFilename = checkMainImage ? "Main_" + filename : filename;
         File file = new File(fileDir + changeFilename);
 
         try {

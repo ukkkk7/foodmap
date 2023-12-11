@@ -80,4 +80,14 @@ public class BoardController {
         boardService.deleteBoard(boardId);
         return new ResponseEntity<>("삭제되었습니다.", HttpStatus.OK);
     }
+
+    @GetMapping("/boards/{boardId}/main-images")
+    public ResponseEntity<List<BoardImageDto>> MainImagesByStoreId(@PathVariable long boardId) {
+        System.out.println("boardId = " + boardId);
+        List<Long> boardIdAll = boardService.getBoardIdAll(boardId);
+        List<BoardImage> boardMainImageAll = boardImageService.getBoardMainImageAll(boardIdAll);
+        List<BoardImageDto> boardImageDto = getBoardImageDto(boardMainImageAll);
+
+        return new ResponseEntity<>(boardImageDto, HttpStatus.OK);
+    }
 }

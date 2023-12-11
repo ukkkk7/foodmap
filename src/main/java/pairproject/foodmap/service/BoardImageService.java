@@ -9,6 +9,7 @@ import pairproject.foodmap.domain.BoardImage;
 import pairproject.foodmap.repository.BoardImageMapper;
 import pairproject.foodmap.util.FileUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -63,4 +64,19 @@ public class BoardImageService {
     public void deleteBoardImage(List<String> filenames) {
         boardImageMapper.delete(filenames);
     }
+
+    public List<BoardImage> getBoardMainImageAll(List<Long> boardIdAll) {
+        List<BoardImage> boardMainImages = new ArrayList<>();
+        for (Long boardId : boardIdAll) {
+            System.out.println("boardId = " + boardId);
+            BoardImage boardImage = getMainImageFilename(boardId);
+            boardMainImages.add(boardImage);
+        }
+        return boardMainImages;
+    }
+
+    private BoardImage getMainImageFilename(Long boardId) {
+        return boardImageMapper.findMainImage(boardId);
+    }
+
 }

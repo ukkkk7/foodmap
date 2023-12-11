@@ -47,4 +47,8 @@
         WHERE board_id = #{boardId}
     </delete>
 
+    <select id="findBoardIdByStoreId" parameterType="long">
+        SELECT * FROM board
+        WHERE store_id = #{storeId}
+    </select>
 </mapper>

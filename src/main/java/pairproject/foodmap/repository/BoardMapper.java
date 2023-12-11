@@ -11,12 +11,9 @@ import java.util.List;
 @Repository
 public interface BoardMapper {
     void saveAndGetId(Board board);
-
     Board findById(long boardId);
-
     List<Board> findAll();
-
     int edit(@Param("board") Board board, @Param("boardId") long boardId);
     int deleteById(long boardId);
-
+    List<Long> findBoardIdByStoreId(long storeId);
 }

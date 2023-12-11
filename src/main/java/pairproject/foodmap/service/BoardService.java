@@ -44,4 +44,9 @@ public class BoardService {
             throw new RuntimeException("[Exception] Board 삭제 실패");
         }
     }
+
+    public List<Long> getBoardIdAll(long boardId) {
+        long storeId = getBoardById(boardId).getStoreId();
+        return boardMapper.findBoardIdByStoreId(storeId);
+    }
 }

@@ -12,4 +12,5 @@ public interface BoardImageMapper {
     void save(@Param("filenames") List<String> filenames, @Param("boardId") long boardId);
     List<BoardImage> findAllByBoardId(long boardId);
     void delete(List<String> filenames);
+    BoardImage findMainImage(Long boardId);
 }
