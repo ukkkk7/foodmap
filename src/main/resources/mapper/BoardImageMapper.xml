@@ -37,7 +37,7 @@
 
     <select id="findMainImage" parameterType="String">
         SELECT * FROM board_Image
-        WHERE board_id = ${boardId}
+        WHERE board_id = #{boardId}
         AND name LIKE 'Main\\_%' ESCAPE '\\'
     </select>
 
