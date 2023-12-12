@@ -82,7 +82,7 @@ public class BoardController {
     }
 
     @GetMapping("/boards/{boardId}/main-images")
-    public ResponseEntity<List<BoardImageDto>> MainImageList(@PathVariable long boardId) {
+    public ResponseEntity<List<BoardImageDto>> MainImagesByStoreId(@PathVariable long boardId) {
         System.out.println("boardId = " + boardId);
         List<Long> boardIdAll = boardService.getBoardIdAll(boardId);
         List<BoardImage> boardMainImageAll = boardImageService.getBoardMainImageAll(boardIdAll);
