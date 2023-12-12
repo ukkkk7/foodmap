@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="pairproject.foodmap.repository.SubscribeMapper">
+
+    <resultMap id="SubscribeMap" type="pairproject.foodmap.domain.Subscribe">
+        <id property="subscribeId" column="subscribe_id" />
+    </resultMap>
+
+    <insert id="save">
+        INSERT INTO subscribe(following, follower)
+        VALUES (#{following}, #{follower})
+    </insert>
+
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM subscribe
+        WHERE subscribe_id = #{subscribeId}
+    </delete>
+</mapper>
