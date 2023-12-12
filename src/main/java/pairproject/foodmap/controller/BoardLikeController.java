@@ -40,4 +40,10 @@ public class BoardLikeController {
                 .toList();
         return new ResponseEntity<>(boardDtoList, HttpStatus.OK);
     }
+
+    @GetMapping("/boards/{boardId}/like")
+    public ResponseEntity<Integer> boardLikeCount(@PathVariable long boardId) {
+        int boardLikeCount = boardLikeService.getBoardLikeCount(boardId);
+        return new ResponseEntity<>(boardLikeCount, HttpStatus.OK);
+    }
 }

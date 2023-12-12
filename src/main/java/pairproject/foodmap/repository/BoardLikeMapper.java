@@ -14,4 +14,6 @@ public interface BoardLikeMapper {
     void delete(@Param("userId") long userId, @Param("boardId") long boardId);
 
     List<Long> findBoardIdAllByUserId(long userId);
+
+    int findBoardLikeCount(long boardId);
 }

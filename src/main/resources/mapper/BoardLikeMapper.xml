@@ -34,4 +34,10 @@
         SELECT board_id FROM board_like WHERE userId = #{userId}
     </select>
 
+    <select id="findBoardLikeCount" parameterType="long">
+        SELECT COUNT(board_id) FROM board_like
+        WHERE board_id = #{boardId}
+        GROUP BY board_id
+    </select>
+
 </mapper>
