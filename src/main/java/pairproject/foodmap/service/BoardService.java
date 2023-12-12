@@ -3,10 +3,7 @@ package pairproject.foodmap.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 import pairproject.foodmap.domain.Board;
-import pairproject.foodmap.domain.BoardImage;
-import pairproject.foodmap.repository.BoardImageMapper;
 import pairproject.foodmap.repository.BoardMapper;
 
 import java.util.List;

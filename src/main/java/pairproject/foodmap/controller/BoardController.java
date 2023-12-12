@@ -33,7 +33,7 @@ public class BoardController {
                 .toList();
     }
 
-    @PostMapping("/board")
+    @PostMapping("/board") //게시글 생성
     public ResponseEntity<BoardDto> boardCreate(@RequestPart Board board,
                                                 @RequestPart("addFiles") List<MultipartFile> addFiles,
                                                 @RequestPart("mainImageFile") MultipartFile mainImageFile) {
@@ -49,13 +49,13 @@ public class BoardController {
         return new ResponseEntity<>(boardDto, HttpStatus.OK);
     }
 
-    @GetMapping("/boards/{boardId}")
+    @GetMapping("/boards/{boardId}") //게시글 상세
     public ResponseEntity<BoardDto> boardDetails(@PathVariable long boardId) {
         Board board = boardService.getBoardById(boardId);
         return new ResponseEntity<>(getBoardDto(board), HttpStatus.OK);
     }
 
-    @GetMapping("/boards")
+    @GetMapping("/boards") //게시글 전체 목록
     public ResponseEntity<List<BoardDto>> boardList() {
         List<BoardDto> dtoList = boardService.getBoardAll().stream()
                 .map(board -> modelMapper.map(board, BoardDto.class))
@@ -63,7 +63,7 @@ public class BoardController {
         return new ResponseEntity<>(dtoList, HttpStatus.OK);
     }
 
-    @PostMapping("/boards/{boardId}")
+    @PostMapping("/boards/{boardId}") //게시글 수정
     public ResponseEntity<BoardDto> boardUpdate(@RequestPart Board board,
                                                 @PathVariable long boardId,
                                                 @RequestPart("addFiles") List<MultipartFile> addFiles,
@@ -73,7 +73,7 @@ public class BoardController {
         return new ResponseEntity<>(getBoardDto(updated), HttpStatus.OK);
     }
 
-    @DeleteMapping("/boards/{boardId}")
+    @DeleteMapping("/boards/{boardId}") //게시글 삭제
     public ResponseEntity<String> boardDelete(@PathVariable long boardId) {
         List<String> filenames = boardImageService.getFilenameByBoardId(boardId);
         boardImageService.deleteBoardImage(filenames);
@@ -81,9 +81,8 @@ public class BoardController {
         return new ResponseEntity<>("삭제되었습니다.", HttpStatus.OK);
     }
 
-    @GetMapping("/boards/{boardId}/main-images")
-    public ResponseEntity<List<BoardImageDto>> MainImagesByStoreId(@PathVariable long boardId) {
-        System.out.println("boardId = " + boardId);
+    @GetMapping("/boards/{boardId}/main-images") //메인 이미지 목록
+    public ResponseEntity<List<BoardImageDto>> MainImagesList(@PathVariable long boardId) {
         List<Long> boardIdAll = boardService.getBoardIdAll(boardId);
         List<BoardImage> boardMainImageAll = boardImageService.getBoardMainImageAll(boardIdAll);
         List<BoardImageDto> boardImageDto = getBoardImageDto(boardMainImageAll);
