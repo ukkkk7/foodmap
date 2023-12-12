@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="pairproject.foodmap.repository.BoardLikeMapper">
+
+    <resultMap id="boardLikeMap" type="pairproject.foodmap.domain.BoardLike">
+        <id property="boardLikeId" column="like_id" />
+        <result property="boardId" column="board_id"/>
+        <result property="userId" column="user_id"/>
+
+        <association property="user" javaType="pairproject.foodmap.domain.User">
+            <id property="userId" column="user_id"/>
+        </association>
+        <association property="board" javaType="pairproject.foodmap.domain.Board">
+            <id property="boardId" column="board_id"/>
+        </association>
+
+    </resultMap>
+
+
+
+    <insert id="save">
+        INSERT INTO board_like(user_id, board_id) VALUES (#{userId}, #{boardId})
+    </insert>
+
+    <delete id="delete">
+        DELETE FROM board_like
+        WHERE user_id = #{userId} AND board_id = #{boardId}
+    </delete>
+
+    <select id="findBoardIdAllByUserId" parameterType="long">
+        SELECT board_id FROM board_like WHERE userId = #{userId}
+    </select>
+
+</mapper>
