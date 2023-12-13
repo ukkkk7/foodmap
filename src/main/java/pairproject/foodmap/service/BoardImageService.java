@@ -68,7 +68,6 @@ public class BoardImageService {
     public List<BoardImage> getBoardMainImageAll(List<Long> boardIdAll) {
         List<BoardImage> boardMainImages = new ArrayList<>();
         for (Long boardId : boardIdAll) {
-            System.out.println("boardId = " + boardId);
             BoardImage boardImage = getMainImageFilename(boardId);
             boardMainImages.add(boardImage);
         }
