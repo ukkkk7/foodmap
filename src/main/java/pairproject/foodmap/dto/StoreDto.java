@@ -5,15 +5,15 @@ import lombok.Data;
 @Data
 public class StoreDto {
 
-   private long store_id;
-   private String store_name;
+   private long storeId;
+   private String storeName;
    private String address;
-   private String phone_number;
+   private String phoneNumber;
    private String runtime;
-   private double longtitude;
+   private double longitude;
    private double latitude;
    private int like_count;
    private int hate_count;
-   private long category_id;
+   private String categoryId;
 
 }
