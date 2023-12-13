@@ -18,4 +18,20 @@
         DELETE FROM subscribe
         WHERE subscribe_id = #{subscribeId}
     </delete>
+
+    <select id="findFollowerCount" parameterType="long">
+        SELECT COUNT(follower) FROM subscribe
+        WHERE following = #{userId}
+        GROUP BY follower
+    </select>
+
+    <select id="findFollowingList" parameterType="long">
+        SELECT following FROM subscribe
+        WHERE follower = #{userId}
+    </select>
+
+    <select id="findFollowerList" parameterType="long">
+        SELECT follower FROM subscribe
+        WHERE following = #{userId}
+    </select>
 </mapper>
