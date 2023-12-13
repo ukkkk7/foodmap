@@ -5,25 +5,25 @@
 
 <mapper namespace="pairproject.foodmap.repository.CategoryMapper">
 
-    <resultMap id="boardImageMap" type="pairproject.foodmap.domain.Category">
+    <resultMap id="categoryMap" type="pairproject.foodmap.domain.Category">
         <id property="categoryId" column="category_id" />
     </resultMap>
 
     <insert id="save" parameterType="pairproject.foodmap.domain.Category">
-        INSERT INTO category(name) VALUES (#{name})
+        INSERT INTO category(category_id) VALUES (#{categoryId})
     </insert>
 
-    <delete id="deleteById" parameterType="long">
+    <delete id="deleteById" parameterType="String">
         DELETE FROM category WHERE category_id = #{categoryId}
     </delete>
 
-    <select id="findNameAll">
-        SELECT name FROM category
+    <select id="findAll" resultMap="categoryMap">
+        SELECT * FROM category
     </select>
 
     <update id="edit" >
         UPDATE category
-        SET name = #{category.name}
+        SET category_id = #{newCategoryId}
         WHERE category_id = #{categoryId}
     </update>
 

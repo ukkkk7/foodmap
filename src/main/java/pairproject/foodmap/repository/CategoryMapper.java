@@ -2,19 +2,21 @@ package pairproject.foodmap.repository;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 import pairproject.foodmap.domain.Category;
 
 import java.util.List;
 
 @Mapper
+@Repository
 public interface CategoryMapper {
 
     void save(Category category);
 
-    void deleteById(long categoryId);
+    void deleteById(String categoryId);
 
-    List<String> findNameAll();
+    List<Category> findAll();
 
-    void edit(@Param("categoryId") long categoryId,
-              @Param("category") Category category);
+    void edit(@Param("categoryId") String categoryId,
+              @Param("newCategoryId") String newCategoryId);
 }
