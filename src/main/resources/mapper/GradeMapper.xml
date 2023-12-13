@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="pairproject.foodmap.repository.GradeMapper">
+
+    <resultMap id="gradeMap" type="pairproject.foodmap.domain.Grade">
+        <id property="gradeId" column="grade_id"/>
+        <result property="rangeMin" column="range_min"/>
+        <result property="rangeMax" column="range_max"/>
+    </resultMap>
+
+    <insert id="save" parameterType="pairproject.foodmap.domain.Grade">
+        INSERT INTO grade(name, range_min, range_max)
+        VALUES (#{name}, #{rangeMin}, #{rangeMax})
+    </insert>
+
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM grade WHERE grade_id = #{gradeId}
+    </delete>
+
+    <select id="findGradeIdByRange" parameterType="int">
+        SELECT grade_id FROM grade
+        WHERE range_min &lt;= #{followerCount}
+        AND #{followerCount} &lt;= range_max
+    </select>
+</mapper>
