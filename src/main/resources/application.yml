@@ -17,6 +17,10 @@ file:
   image:
     path: C:\foodmap\image\
 
+credential:
+  keys:
+    firebase-full-path: C:\foodmap\keys\firebase\foodmap-1e013-firebase-adminsdk-5h5pi-8188cb2e63.json
+
 mybatis:
   mapper-locations: classpath:/mapper/*.xml
   configuration:

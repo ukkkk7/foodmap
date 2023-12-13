@@ -12,6 +12,7 @@ import pairproject.foodmap.dto.BoardDto;
 import pairproject.foodmap.dto.BoardImageDto;
 import pairproject.foodmap.service.BoardImageService;
 import pairproject.foodmap.service.BoardService;
+import pairproject.foodmap.service.SubscribeService;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class BoardController {
     private final BoardService boardService;
     private final BoardImageService boardImageService;
     private final ModelMapper modelMapper;
+    private final SubscribeService subscribeService;
 
     private BoardDto getBoardDto(Board board) {
         return modelMapper.map(board, BoardDto.class);
@@ -36,7 +38,8 @@ public class BoardController {
     @PostMapping("/board") //게시글 생성
     public ResponseEntity<BoardDto> boardCreate(@RequestPart Board board,
                                                 @RequestPart("addFiles") List<MultipartFile> addFiles,
-                                                @RequestPart("mainImageFile") MultipartFile mainImageFile) {
+                                                @RequestPart("mainImageFile") MultipartFile mainImageFile,
+                                                @RequestParam long userId) { //인증된 사용자 변경 필요
         Board created = boardService.createBoard(board); //게시글 생성
         List<BoardImage> boardImages = boardImageService.createBoardImage( //게시글 이미지 생성
                 created.getBoardId(), addFiles, mainImageFile);
@@ -46,6 +49,7 @@ public class BoardController {
         List<BoardImageDto> boardImageDto = getBoardImageDto(boardImages);
         boardDto.setBoardImages(boardImageDto);
 
+        subscribeService.sendAlarm(userId); //팔로워들에게 새글 알람 발송
         return new ResponseEntity<>(boardDto, HttpStatus.OK);
     }
 
