@@ -18,7 +18,7 @@ public class GradeController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @DeleteMapping("/grade/{gradeId}")
-    public ResponseEntity<String> gradeCreate(@PathVariable long gradeId) {
+    public ResponseEntity<String> gradeDelete(@PathVariable long gradeId) {
         gradeService.deleteGrade(gradeId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
