@@ -22,14 +22,15 @@ public class CategoryController {
     }
 
     @DeleteMapping("/categories/{categoryId}")
-    public ResponseEntity<String> categoryDelete(@PathVariable long categoryId) {
+    public ResponseEntity<String> categoryDelete(@PathVariable String categoryId) {
         categoryService.deleteCategoryById(categoryId);
         return new ResponseEntity<>("삭제되었습니다", HttpStatus.OK);
     }
 
     @PatchMapping("/categories/{categoryId}")
-    public ResponseEntity<String> categoryUpdate(@PathVariable long categoryId, @RequestBody Category category) {
-        categoryService.updateCategory(categoryId, category);
+    public ResponseEntity<String> categoryUpdate(@PathVariable String categoryId,
+                                                 @RequestBody String newCategoryId) {
+        categoryService.updateCategory(categoryId, newCategoryId);
         return new ResponseEntity<>("수정되었습니다", HttpStatus.OK);
     }
 

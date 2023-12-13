@@ -13,10 +13,10 @@ public interface CategoryMapper {
 
     void save(Category category);
 
-    void deleteById(long categoryId);
+    void deleteById(String categoryId);
 
-    List<String> findNameAll();
+    List<Category> findAll();
 
-    void edit(@Param("categoryId") long categoryId,
-              @Param("category") Category category);
+    void edit(@Param("categoryId") String categoryId,
+              @Param("newCategoryId") String newCategoryId);
 }
