@@ -1,7 +1,8 @@
 package pairproject.foodmap.service;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,10 +45,23 @@ public class CategoryService {
 
     public String decodeName(String name) {
         String json = URLDecoder.decode(name, StandardCharsets.UTF_8);
-        JsonParser parser = new JsonParser();
-        JsonObject jsonObject = parser.parse(json).getAsJsonObject();
+        return getTestByJson(json);
+    }
 
-        return jsonObject.get("categoryId").getAsString();
+    private static String getTestByJson(String json) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            JsonNode rootNode = mapper.readTree(json);
+            JsonNode categoryIdNode = rootNode.get("categoryId");
+
+            if (categoryIdNode != null) {
+                return categoryIdNode.asText();
+            } else {
+                throw new RuntimeException("categoryId 키를 찾을 수 없습니다.");
+            }
+        } catch (Exception e) {
+            return "오류가 발생했습니다.";
+        }
     }
 
     public List<String> getCategoryNames() {
