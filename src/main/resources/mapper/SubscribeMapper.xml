@@ -22,7 +22,6 @@
     <select id="findFollowerCount" parameterType="long">
         SELECT COUNT(follower) FROM subscribe
         WHERE following = #{userId}
-        GROUP BY follower
     </select>
 
     <select id="findFollowingList" parameterType="long">

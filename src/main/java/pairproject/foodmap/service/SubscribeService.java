@@ -13,9 +13,12 @@ import java.util.List;
 @Transactional
 public class SubscribeService {
     private final SubscribeMapper subscribeMapper;
+    private final GradeService gradeService;
     private final AlarmUtil alarmUtil;
+
     public void createSubscribe(long following, long follower) {
         subscribeMapper.save(following, follower);
+        gradeService.updateGrade(getFollowerCount(following), following);
     }
 
     public void deleteSubscribeById(long subscribeId) {
