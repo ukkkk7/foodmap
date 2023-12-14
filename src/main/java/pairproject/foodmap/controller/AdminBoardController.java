@@ -28,6 +28,12 @@ public class AdminBoardController {
         return modelMapper.map(board, BoardDto.class);
     }
 
+    private List<BoardImageDto> getBoardImageDto(List<BoardImage> boardImages) {
+        return boardImages.stream()
+                .map(boardImage -> modelMapper.map(boardImage, BoardImageDto.class))
+                .toList();
+    }
+
     @PostMapping("/boards/{boardId}") //게시글 수정
     public ResponseEntity<BoardDto> boardUpdate(
             @RequestPart Board board,
