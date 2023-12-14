@@ -1,6 +1,5 @@
 package pairproject.foodmap.service;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +39,7 @@ public class CategoryService {
                 .findAny().isEmpty(); //중복이 아니면 true
         if (!isDuplicateCheck) { //중복이면 예외 발생
             throw new RuntimeException("이미 중복되는 이름이 있습니다.");
-        }
+            }
     }
 
     public String decodeName(String name) {
