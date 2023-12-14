@@ -1,9 +1,12 @@
 package pairproject.foodmap.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pairproject.foodmap.domain.Board;
@@ -16,6 +19,7 @@ import pairproject.foodmap.service.SubscribeService;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class BoardController {
@@ -36,19 +40,31 @@ public class BoardController {
     }
 
     @PostMapping("/board") //게시글 생성
-    public ResponseEntity<BoardDto> boardCreate(@RequestPart Board board,
-                                                @RequestPart("addFiles") List<MultipartFile> addFiles,
-                                                @RequestPart("mainImageFile") MultipartFile mainImageFile,
-                                                @RequestParam long userId) { //인증된 사용자 변경 필요
-        Board created = boardService.createBoard(board); //게시글 생성
-        List<BoardImage> boardImages = boardImageService.createBoardImage( //게시글 이미지 생성
-                created.getBoardId(), addFiles, mainImageFile);
+    public ResponseEntity<BoardDto> boardCreate(
+            @RequestPart @Validated Board board,
+            BindingResult bindingResult,
+            @RequestPart(value = "addFiles", required = false) List<MultipartFile> addFiles,
+            @RequestPart(value = "mainImageFile", required = false) MultipartFile mainImageFile,
+            @RequestParam long userId) { //인증된 사용자 변경 필요
+        //게시글 생성
+        Board created = boardService.createBoard(board);
 
-        //dto 변환
+        if (bindingResult.hasErrors()) {
+            log.error("검증 오류 발생 : {}", bindingResult);
+            throw new RuntimeException(String.valueOf(bindingResult));
+        }
+
+        //Board dto 변환
         BoardDto boardDto = getBoardDto(created);
-        List<BoardImageDto> boardImageDto = getBoardImageDto(boardImages);
-        boardDto.setBoardImages(boardImageDto);
 
+        if (addFiles != null || mainImageFile != null) {
+            List<BoardImage> boardImages = boardImageService.createBoardImage( //게시글 이미지 생성
+                    created.getBoardId(), addFiles, mainImageFile);
+
+            //이미지 dto 변환
+            List<BoardImageDto> boardImageDto = getBoardImageDto(boardImages);
+            boardDto.setBoardImages(boardImageDto);
+        }
         subscribeService.sendAlarm(userId); //팔로워들에게 새글 알람 발송
         return new ResponseEntity<>(boardDto, HttpStatus.OK);
     }
@@ -67,14 +83,30 @@ public class BoardController {
         return new ResponseEntity<>(dtoList, HttpStatus.OK);
     }
 
+    /**
+     * 기존의 이미지를 삭제할 수 있음
+     * 새로운 이미지를 추가할 수 있음
+     * 하지만 메인 이미지는 변경이 불가
+     */
     @PostMapping("/boards/{boardId}") //게시글 수정
-    public ResponseEntity<BoardDto> boardUpdate(@RequestPart Board board,
-                                                @PathVariable long boardId,
-                                                @RequestPart("addFiles") List<MultipartFile> addFiles,
-                                                @RequestPart("deleteFilenames") List<String> deleteFilenames) {
-        List<BoardImage> boardImages = boardImageService.updateBoardImage(boardId, addFiles, deleteFilenames);
+    public ResponseEntity<BoardDto> boardUpdate(
+            @RequestPart Board board,
+            @PathVariable long boardId,
+            @RequestPart(value = "addFiles", required = false) List<MultipartFile> addFiles,
+            @RequestPart(value = "deleteFilenames", required = false) List<String> deleteFilenames) {
+
         Board updated = boardService.updateBoard(board, boardId);
-        return new ResponseEntity<>(getBoardDto(updated), HttpStatus.OK);
+        BoardDto boardDto = getBoardDto(updated);
+
+        if (addFiles != null || deleteFilenames != null) {
+            List<BoardImage> boardImages =
+                    boardImageService.updateBoardImage(boardId, addFiles, deleteFilenames);
+
+            //이미지 dto 변환
+            List<BoardImageDto> boardImageDto = getBoardImageDto(boardImages);
+            boardDto.setBoardImages(boardImageDto);
+        }
+            return new ResponseEntity<>(boardDto, HttpStatus.OK);
     }
 
     @DeleteMapping("/boards/{boardId}") //게시글 삭제
