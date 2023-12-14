@@ -42,11 +42,13 @@ public class BoardImageService {
                                              List<MultipartFile> addFiles,
                                              List<String> deleteFilenames) {
         fileUtil.updateFileDir(fileDir);
-        fileUtil.deleteAll(deleteFilenames);
         List<String> addFilenames = fileUtil.saveAll(addFiles);
-
         boardImageMapper.save(addFilenames, boardId);
-        boardImageMapper.delete(deleteFilenames);
+
+        if (deleteFilenames != null) {
+            fileUtil.deleteAll(deleteFilenames);
+            boardImageMapper.delete(deleteFilenames);
+        }
         return getBoardImageAllByBoardId(boardId);
     }
 
