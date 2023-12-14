@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import pairproject.foodmap.domain.Board;
 import pairproject.foodmap.domain.BoardImage;
 import pairproject.foodmap.dto.BoardDto;
+import pairproject.foodmap.dto.BoardImageDto;
 import pairproject.foodmap.service.BoardImageService;
 import pairproject.foodmap.service.BoardService;
 
@@ -25,6 +26,11 @@ public class AdminBoardController {
 
     private BoardDto getBoardDto(Board board) {
         return modelMapper.map(board, BoardDto.class);
+    }
+    private List<BoardImageDto> getBoardImageDto(List<BoardImage> boardImages) {
+        return boardImages.stream()
+                .map(boardImage -> modelMapper.map(boardImage, BoardImageDto.class))
+                .toList();
     }
 
     @PostMapping("/boards/{boardId}") //게시글 수정
