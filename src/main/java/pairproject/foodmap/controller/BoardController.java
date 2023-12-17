@@ -1,5 +1,6 @@
 package pairproject.foodmap.controller;
 
+import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -51,7 +52,7 @@ public class BoardController {
 
         if (bindingResult.hasErrors()) {
             log.error("검증 오류 발생 : {}", bindingResult);
-            throw new RuntimeException(String.valueOf(bindingResult));
+            throw new ValidationException(String.valueOf(bindingResult));
         }
 
         //Board dto 변환
@@ -93,7 +94,13 @@ public class BoardController {
             @RequestPart Board board,
             @PathVariable long boardId,
             @RequestPart(value = "addFiles", required = false) List<MultipartFile> addFiles,
-            @RequestPart(value = "deleteFilenames", required = false) List<String> deleteFilenames) {
+            @RequestPart(value = "deleteFilenames", required = false) List<String> deleteFilenames,
+            BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            log.error("검증 오류 발생 : {}", bindingResult);
+            throw new ValidationException(String.valueOf(bindingResult));
+        }
 
         Board updated = boardService.updateBoard(board, boardId);
         BoardDto boardDto = getBoardDto(updated);
@@ -106,7 +113,7 @@ public class BoardController {
             List<BoardImageDto> boardImageDto = getBoardImageDto(boardImages);
             boardDto.setBoardImages(boardImageDto);
         }
-            return new ResponseEntity<>(boardDto, HttpStatus.OK);
+        return new ResponseEntity<>(boardDto, HttpStatus.OK);
     }
 
     @DeleteMapping("/boards/{boardId}") //게시글 삭제

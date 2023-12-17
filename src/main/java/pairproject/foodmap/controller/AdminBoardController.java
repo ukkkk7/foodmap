@@ -1,9 +1,12 @@
 package pairproject.foodmap.controller;
 
+import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pairproject.foodmap.domain.Board;
@@ -15,6 +18,7 @@ import pairproject.foodmap.service.BoardService;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
@@ -39,7 +43,13 @@ public class AdminBoardController {
             @RequestPart Board board,
             @PathVariable long boardId,
             @RequestPart(value = "addFiles", required = false) List<MultipartFile> addFiles,
-            @RequestPart(value = "deleteFilenames", required = false) List<String> deleteFilenames) {
+            @RequestPart(value = "deleteFilenames", required = false) List<String> deleteFilenames,
+            BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            log.error("검증 오류 발생 : {}", bindingResult);
+            throw new ValidationException(String.valueOf(bindingResult));
+        }
 
         Board updated = boardService.updateBoard(board, boardId);
         BoardDto boardDto = getBoardDto(updated);
@@ -54,6 +64,7 @@ public class AdminBoardController {
         }
         return new ResponseEntity<>(boardDto, HttpStatus.OK);
     }
+
 
     @DeleteMapping("/boards/{boardId}") //게시글 삭제
     public ResponseEntity<String> boardDelete(@PathVariable long boardId) {

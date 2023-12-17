@@ -3,6 +3,7 @@ package pairproject.foodmap.util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+import pairproject.foodmap.exception.FileOperationException;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class FileUtil {
         } catch (Exception e) {
             deleteOne(changeFilename); //남아있는 파일이 있는 경우 삭제
             log.error("[Exception] {}", e.getMessage());
-            throw new RuntimeException("파일 저장 실패");
+            throw new FileOperationException("파일 저장 실패");
         }
         return changeFilename;
 
@@ -59,7 +60,7 @@ public class FileUtil {
                     .stream()
                     .map(MultipartFile::getName).toList());
             log.error("[Exception] {}", e.getMessage());
-            throw new RuntimeException();
+            throw new FileOperationException("파일 저장 실패.");
         }
         return filenames;
     }
@@ -71,7 +72,7 @@ public class FileUtil {
                 log.info("{} 파일 삭제 성공", filename);
             } else {
                 log.error("{} 파일 삭제 실패", filename);
-                throw new RuntimeException("파일 삭제 실패");
+                throw new FileOperationException("파일 삭제 실패");
             }
         } else {
             log.info("{} 파일이 존재하지 않습니다.", filename);

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pairproject.foodmap.domain.Board;
+import pairproject.foodmap.exception.DataAccessException;
 import pairproject.foodmap.repository.BoardMapper;
 
 import java.util.List;
@@ -32,13 +33,13 @@ public class BoardService {
         if (returnValue == 1){
             return boardMapper.findById(boardId);
         }
-        throw new RuntimeException("[Exception] Board 수정 실패");
+        throw new DataAccessException("[Exception] Board 수정 실패");
     }
 
     public void deleteBoard(long boardId) {
         int returnValue = boardMapper.deleteById(boardId);
         if (returnValue != 1) {
-            throw new RuntimeException("[Exception] Board 삭제 실패");
+            throw new DataAccessException("[Exception] Board 삭제 실패");
         }
     }
 

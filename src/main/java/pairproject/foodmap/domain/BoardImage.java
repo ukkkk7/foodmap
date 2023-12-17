@@ -9,3 +9,4 @@ public class BoardImage {
     private long boardId;
 
 }
+
