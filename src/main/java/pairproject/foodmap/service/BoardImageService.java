@@ -24,32 +24,45 @@ public class BoardImageService {
     public List<BoardImage> createBoardImage(long boardId,
                                              List<MultipartFile> addFiles,
                                              MultipartFile mainImageFile) {
-        //사용자가 mainImageFile 를 선택(생성)했는지 확인
-        if (mainImageFile.isEmpty()) {
-            mainImageFile = addFiles.get(0);
-            addFiles.remove(0);
-        }
-        fileUtil.updateFileDir(fileDir); //파일경로 변경
-        String savedOne = fileUtil.saveOne(mainImageFile, true);//mainImageFile 저장
-        List<String> filenames = fileUtil.saveAll(addFiles); //나머지 이미지 파일 저장
-        filenames.add(savedOne);
 
-        boardImageMapper.save(filenames, boardId); //DB 저장
-        return getBoardImageAllByBoardId(boardId);
+        if (addFiles != null || mainImageFile != null) {
+            //사용자가 mainImageFile 를 선택(생성)했는지 확인
+            if (mainImageFile.isEmpty()) {
+                mainImageFile = addFiles.get(0);
+                addFiles.remove(0);
+            }
+            saveFilesAndDB(addFiles, mainImageFile, boardId);
+            return getBoardImageAllByBoardId(boardId);
+        }
+        return new ArrayList<>();
+    }
+
+    private void saveFilesAndDB(List<MultipartFile> addFiles, MultipartFile mainImageFile, long boardId) {
+        String savedOne = fileUtil.saveOne(mainImageFile, true);//mainImageFile 저장
+        List<String> saveFilenames = saveFilesAndGetFilenames(boardId, addFiles);
+        saveFilenames.add(savedOne);
+        boardImageMapper.save(saveFilenames, boardId);
     }
 
     public List<BoardImage> updateBoardImage(long boardId,
                                              List<MultipartFile> addFiles,
                                              List<String> deleteFilenames) {
-        fileUtil.updateFileDir(fileDir);
-        List<String> addFilenames = fileUtil.saveAll(addFiles);
-        boardImageMapper.save(addFilenames, boardId);
+        if (addFiles != null) {
+            List<String> saveFilenames = saveFilesAndGetFilenames(boardId, addFiles);
+            boardImageMapper.save(saveFilenames, boardId);
+        }
 
         if (deleteFilenames != null) {
             fileUtil.deleteAll(deleteFilenames);
             boardImageMapper.delete(deleteFilenames);
         }
         return getBoardImageAllByBoardId(boardId);
+    }
+
+    private List<String> saveFilesAndGetFilenames(long boardId, List<MultipartFile> addFiles) {
+        fileUtil.updateFileDir(fileDir);
+        return fileUtil.saveAll(addFiles);
+
     }
 
     public List<BoardImage> getBoardImageAllByBoardId(long boardId) {
