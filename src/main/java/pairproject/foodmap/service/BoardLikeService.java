@@ -2,14 +2,15 @@ package pairproject.foodmap.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pairproject.foodmap.domain.Board;
-import pairproject.foodmap.domain.BoardLike;
 import pairproject.foodmap.repository.BoardLikeMapper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class BoardLikeService {
     private final BoardLikeMapper boardLikeMapper;
@@ -33,4 +34,7 @@ public class BoardLikeService {
         return boardList;
     }
 
+    public int getBoardLikeCount(long boardId) {
+        return boardLikeMapper.findBoardLikeCount(boardId);
+    }
 }
