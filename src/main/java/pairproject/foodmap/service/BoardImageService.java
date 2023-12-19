@@ -37,7 +37,7 @@ public class BoardImageService {
         return new ArrayList<>();
     }
 
-    private void saveFilesAndDB(List<MultipartFile> addFiles, MultipartFile mainImageFile, long boardId) {
+    public void saveFilesAndDB(List<MultipartFile> addFiles, MultipartFile mainImageFile, long boardId) {
         String savedOne = fileUtil.saveOne(mainImageFile, true);//mainImageFile 저장
         List<String> saveFilenames = saveFilesAndGetFilenames(boardId, addFiles);
         saveFilenames.add(savedOne);
@@ -59,7 +59,7 @@ public class BoardImageService {
         return getBoardImageAllByBoardId(boardId);
     }
 
-    private List<String> saveFilesAndGetFilenames(long boardId, List<MultipartFile> addFiles) {
+    public List<String> saveFilesAndGetFilenames(long boardId, List<MultipartFile> addFiles) {
         fileUtil.updateFileDir(fileDir);
         return fileUtil.saveAll(addFiles);
 
