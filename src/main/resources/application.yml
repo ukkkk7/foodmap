@@ -16,6 +16,7 @@
 
   logging:
     level:
+      root: INFO
       jdbc:
         sqlonly: DEBUG
         audit: off
@@ -23,4 +24,3 @@
         connection: off
 
 
-      org.springframework.web: DEBUG
