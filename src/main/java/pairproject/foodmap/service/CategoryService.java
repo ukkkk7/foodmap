@@ -1,6 +1,5 @@
 package pairproject.foodmap.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pairproject.foodmap.domain.Category;
 import pairproject.foodmap.exception.DuplicateUserException;
+import pairproject.foodmap.exception.exHandler.JsonParsingException;
 import pairproject.foodmap.repository.CategoryMapper;
 
 import java.net.URLDecoder;
@@ -49,23 +49,21 @@ public class CategoryService {
         return getNameByJson(json);
     }
 
-    private static String getNameByJson(String json) {
+    public String getNameByJson(String json) {
         ObjectMapper mapper = new ObjectMapper();
+        JsonNode categoryIdNode = null;
         try {
             JsonNode rootNode = mapper.readTree(json);
-            JsonNode categoryIdNode = rootNode.get("categoryId");
+            categoryIdNode = rootNode.get("categoryId");
 
-            if (categoryIdNode != null) {
-                return categoryIdNode.asText();
-            } else {
-                throw new IllegalAccessException("categoryId 키를 찾을 수 없습니다.");
-            }
-        } catch (JsonProcessingException e) {
-            return "JSON 파싱 오류 " + e.getMessage();
-        } catch (IllegalAccessException e) {
-            return e.getMessage();
         } catch (Exception e) {
-            return "오류가 발생하였습니다.";
+            throw new JsonParsingException("JSON 파싱 오류");
+        }
+
+        if (categoryIdNode != null) {
+            return categoryIdNode.asText();
+        } else {
+            throw new JsonParsingException("categoryId 키 없음");
         }
     }
 
