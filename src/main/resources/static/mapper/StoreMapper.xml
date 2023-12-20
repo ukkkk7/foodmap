@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="pairproject.foodmap.repository.StoreMapper">
+
+
+    <resultMap id="store" type="StoreDto">
+        <id property="storeId" column="store_id"/>
+        <result property="storeName" column="store_name"/>
+        <result property="address" column="address"/>
+        <result property="phoneNum" column="phone_number"/>
+        <result property="longitude" column="longitude"/>
+        <result property="latitude" column="latitude"/>
+        <result property="likeCnt" column="like_count"/>
+        <result property="hateCnt" column="hate_count"/>
+        <result property="categoryName" column="category_name"/>
+    </resultMap>
+
+    <resultMap id="storeDetail" type="StoreDetailVO">
+        <id property="storeId" column="store_id"/>
+        <result property="storeName" column="store_name"/>
+        <result property="address" column="address"/>
+        <result property="phoneNum" column="phone_number"/>
+        <result property="likeCnt" column="like_count"/>
+        <result property="hateCnt" column="hate_count"/>
+        <result property="categoryName" column="category_name"/>
+        <result property="userId" column="user_id"/>
+        <result property="bookmarkId" column="bookmark_id"/>
+        <result property="likeId" column="like_id"/>
+    </resultMap>
+
+    <!--필터 없는 사용자 위치 100 이내 음식점 단순 검색-->
+
+    <sql id="where">
+        WHERE address like concat('%', #{keyword}, '%')
+        OR store_name like concat('%', #{keyword}, '%')
+        and st_distance_sphere(point(#{longitude}, #{latitude}), point(longitude, latitude)) &lt;500
+    </sql>
+
+    <select id="getStoreList" resultMap="store">
+    select
+    *
+    from store
+    <include refid="where"></include>
+    </select>
+
+    <!--거리순 정렬-->
+    <select id="getNearList" resultMap="store">
+        select
+            *,st_distance_sphere(point(#{longitude}, #{latitude}), point(longitude, latitude)) as distance
+        from store
+        <include refid="where"></include>
+            order by distance
+    </select>
+
+
+    <!--좋아요순 정렬-->
+    <select id="getLikeCntList" resultMap="store">
+        select
+            *
+        from store
+        <include refid="where"></include>
+        order by like_count desc
+    </select>
+
+
+
+    <select id="getStoreDetailList" resultMap="storeDetail">
+        select
+             s.store_name as storeName
+            ,s.address as address
+            ,s.category_name as categoryName
+            ,s.phone_number as phoneNum
+            ,s.like_count as likeCnt
+            ,s.hate_count as hateCnt
+            ,b.bookmark_id as bookmark
+        from store s
+            inner join bookmark b
+                on s.store_id = b.store_id
+            inner join user u
+                on u.user_id = b.user_id
+                    where u.user_id = #{userId} and s.store_id = #{storeId}
+    </select>
+
+
+    <!--음식점 좋아요 등록-->
+
+    <insert id="createStoreLike">
+        insert into store_like(like_id, user_id, store_id) values (null, #{userId}, #{storeId})
+    </insert>
+
+    <delete id="deleteStoreLike">
+        delete from store_like where like_id = #{likeId} and user_id = #{userId}
+    </delete>
+
+
+
+</mapper>
