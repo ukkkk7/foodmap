@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="pairproject.foodmap.repository.BookmarkMapper">
+
+
+    <resultMap id="bookmark" type="BookmarkVO">
+        <id property="bookmarkId" column="bookmark_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="storeId" column="store_id"/>
+        <result property="storeName" column="store_id"/>
+        <result property="likeCnt" column="like_count"/>
+    </resultMap>
+
+
+    <insert id="createBookmark">
+        insert into bookmark(bookmark_id, user_id, store_id) values(null, #{userId}, #{storeId})
+
+    </insert>
+
+    <delete id="deleteBookmark">
+        delete from bookmark where bookmark_id = #{id}
+    </delete>
+
+    <!--북마크 목록 가나다순 정렬-->
+    <select id="getBookmarkList" resultMap="bookmark">
+        select
+            b.*, s.store_name as storeName, s.like_count as likeCnt
+        from bookmark b join store s
+            on b.store_id = s.store_id
+                where b.user_id = #{userId}
+                    order by store_name
+    </select>
+
+
+    <delete id="deleteSelectedBookmark">
+        DELETE FROM bookmark WHERE bookmark_id IN
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+</mapper>
