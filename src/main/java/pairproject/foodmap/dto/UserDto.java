@@ -5,9 +5,9 @@ import lombok.Data;
 @Data
 public class UserDto {
 
-   private long user_id;
+   private long userId;
     //등급 외래키
-   private long grade_id;
+   private long gradeId;
    private String mail;
    private String name;
    private String birth;
