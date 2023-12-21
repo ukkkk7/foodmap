@@ -2,6 +2,7 @@ package pairproject.foodmap.dto.Mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Component;
 import pairproject.foodmap.domain.Board;
 import pairproject.foodmap.domain.BoardImage;
 import pairproject.foodmap.dto.BoardDto;
@@ -10,6 +11,7 @@ import pairproject.foodmap.dto.BoardImageDto;
 import java.util.List;
 
 @RequiredArgsConstructor
+@Component
 public class BoardDtoMapper {
     private final ModelMapper modelMapper;
 

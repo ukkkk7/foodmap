@@ -18,7 +18,7 @@ file:
 
 mybatis:
   type-aliases-package: pairproject.foodmap.dto
-  mapper-locations: static/mapper/*.xml
+  mapper-locations: classpath:static/mapper/*.xml
   configuration:
     map-underscore-to-camel-case: true
 
