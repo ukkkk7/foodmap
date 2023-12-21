@@ -1,26 +1,32 @@
+spring:
+  datasource:
+    url: jdbc:log4jdbc:mysql://localhost:3306/foodmap?serverTimezone=UTC&characterEncoding=UTF-8
+    username: foodmap
+    password: java1234
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 50MB
 
-  spring:
-    datasource:
-      url: jdbc:log4jdbc:mysql://localhost:3306/foodmap?serverTimezone=UTC&characterEncoding=UTF-8
-      username: foodmap
-      password: java1234
-      driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+server:
+  port: 8095
 
+file:
+  image:
+    path: C:\foodmap\image\
 
-  server:
-    port: 8095
+mybatis:
+  type-aliases-package: pairproject.foodmap.dto
+  mapper-locations: classpath:static/mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
 
-  mybatis:
-    type-aliases-package: pairproject.foodmap.dto
-    mapper-locations: static/mapper/*.xml
-
-  logging:
-    level:
-      root: INFO
-      jdbc:
-        sqlonly: DEBUG
-        audit: off
-        resultset: off
-        connection: off
-
-
+logging:
+  level:
+    root: INFO
+    jdbc:
+      sqlonly: DEBUG
+      audit: off
+      resultset: off
+      connection: off
