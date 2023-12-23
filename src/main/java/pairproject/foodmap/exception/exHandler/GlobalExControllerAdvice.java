@@ -1,18 +1,12 @@
-
 package pairproject.foodmap.exception.exHandler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 import pairproject.foodmap.exception.CustomException;
 import pairproject.foodmap.exception.ErrorCode;
 
-
-
-@RestControllerAdvice
-public class ExControllerAdvice {
-
+public class GlobalExControllerAdvice {
 
     @ExceptionHandler(CustomException.class)
     ResponseEntity<ErrorResponse> customExhandler(CustomException e){
