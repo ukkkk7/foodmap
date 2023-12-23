@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pairproject.foodmap.dto.StoreDetailVO;
+import pairproject.foodmap.exception.CustomException;
+import pairproject.foodmap.exception.ErrorCode;
 import pairproject.foodmap.service.StoreLikeService;
 import pairproject.foodmap.service.StoreSearchService;
 
@@ -49,8 +51,7 @@ public class StoreController {
         }
 
             if (result == null || result.isEmpty()) {
-
-                return ResponseEntity.ok().body(Collections.singletonList("검색 결과가 없습니다."));
+                throw new CustomException("검색 결과가 없습니다.", ErrorCode.NOT_FOUND);
             }
 
             return ResponseEntity.ok().body(result);
