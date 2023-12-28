@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="pairproject.foodmap.repository.CategoryMapper">
+
+    <resultMap id="categoryMap" type="pairproject.foodmap.domain.Category">
+        <id property="categoryId" column="category_id" />
+    </resultMap>
+
+    <insert id="save" parameterType="pairproject.foodmap.domain.Category">
+        INSERT INTO category(category_id) VALUES (#{categoryId})
+    </insert>
+
+    <delete id="deleteById" parameterType="String">
+        DELETE FROM category WHERE category_id = #{categoryId}
+    </delete>
+
+    <select id="findAll" resultMap="categoryMap">
+        SELECT * FROM category
+    </select>
+
+    <update id="edit" >
+        UPDATE category
+        SET category_id = #{newCategoryId}
+        WHERE category_id = #{categoryId}
+    </update>
+
+</mapper>

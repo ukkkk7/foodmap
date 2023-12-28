@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="pairproject.foodmap.repository.BoardImageMapper">
+
+    <resultMap id="boardImageMap" type="pairproject.foodmap.domain.BoardImage">
+        <id property="boardImageId" column="image_id" />
+        <result property="boardId" column="board_id"/>
+
+        <association property="board" javaType="pairproject.foodmap.domain.Board">
+            <id property="boardId" column="board_id"/>
+        </association>
+    </resultMap>
+
+
+    <insert id="save" parameterType="java.util.List">
+        INSERT INTO board_Image(name, board_id)
+        VALUES
+        <foreach collection="filenames" item="filename" separator=",">
+            (#{filename}, #{boardId})
+        </foreach>
+    </insert>
+
+    <select id="findAllByBoardId" parameterType="long">
+        SELECT * FROM board_Image WHERE board_id = #{boardId}
+    </select>
+
+    <delete id="delete" parameterType="java.util.List">
+        DELETE FROM board_Image
+        WHERE name IN
+        <foreach collection="filenames" item="filename" open="(" close=")" separator=",">
+            #{filename}
+        </foreach>
+    </delete>
+
+    <select id="findMainImage" parameterType="String">
+        SELECT * FROM board_Image
+        WHERE board_id = ${boardId}
+        AND name LIKE 'Main\\_%' ESCAPE '\\'
+    </select>
+
+</mapper>
